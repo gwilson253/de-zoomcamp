@@ -173,3 +173,4 @@ cython_debug/
 01-docker-terraform/2_docker_sql/ny_taxi_postgres_data
 01-docker-terraform/2_docker_sql/*.csv
 01-docker-terraform/2_docker_sql/*.parquet
+02-workflow-orchestration/flows/04_gcp_kv.yaml
