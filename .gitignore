@@ -176,3 +176,4 @@ cython_debug/
 02-workflow-orchestration/flows/04_gcp_kv.yaml
 
 .DS_Store
+**/.DS_Store
