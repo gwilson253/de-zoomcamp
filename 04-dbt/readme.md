@@ -35,6 +35,13 @@ Run the dbt model without limits (is_test_run: false).
 - 32998722
 - 42998722
 
+SQL: 
+```
+select count(*) as n
+from taxi_data.fact_fhv_trips as f
+where extract(year from f.pickup_datetime) = 2019;
+```
+
 ### Question 4 (2 points)
 
 **What is the service that had the most rides during the month of July 2019 month with the biggest amount of rides after building a tile for the fact_fhv_trips table and the fact_trips tile as seen in the videos?**
@@ -43,22 +50,7 @@ Create a dashboard with some tiles that you find interesting to explore the data
 
 - FHV
 - Green
-- Yellow
+- Yellow [x]
 - FHV and Green
 
-
-## Submitting the solutions
-
-* Form for submitting: https://courses.datatalks.club/de-zoomcamp-2024/homework/hw4
-
-Deadline: 22 February (Thursday), 22:00 CET
-
-
-## Solution (To be published after deadline)
-
-* Video: https://youtu.be/3OPggh5Rca8
-* Answers:
-  * Question 1: It applies a _limit 100_ only to our staging models
-  * Question 2: The code from the development branch we are requesting to merge to main
-  * Question 3: 22998722
-  * Question 4: Yellow
+Here's my [dashboard](https://lookerstudio.google.com/reporting/bae05fc7-110d-47ba-873e-4bf62e96d6a5)
