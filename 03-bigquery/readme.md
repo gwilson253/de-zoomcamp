@@ -4,23 +4,30 @@
 Question 1: What is count of records for the 2024 Yellow Taxi Data?
 - 65,623
 - 840,402
-- 20,332,093
+- 20,332,093 [x]
 - 85,431,289
 
+sql: `select count(*) as n from taxi_data.yellow_taxi_24_ext;`
 
 ## Question 2:
 Write a query to count the distinct number of PULocationIDs for the entire dataset on both the tables.</br> 
 What is the **estimated amount** of data that will be read when this query is executed on the External Table and the Table?
 
 - 18.82 MB for the External Table and 47.60 MB for the Materialized Table
-- 0 MB for the External Table and 155.12 MB for the Materialized Table
+- 0 MB for the External Table and 155.12 MB for the Materialized Table [x]
 - 2.14 GB for the External Table and 0MB for the Materialized Table
 - 0 MB for the External Table and 0MB for the Materialized Table
+
+SQL;
+```
+select count(distinct PULocationID) as n from taxi_data.yellow_taxi_24;
+select count(distinct PULocationID) as n from taxi_data.yellow_taxi_24_ext;
+```
 
 ## Question 3:
 Write a query to retrieve the PULocationID from the table (not the external table) in BigQuery. Now write a query to retrieve the PULocationID and DOLocationID on the same table. Why are the estimated number of Bytes different?
 - BigQuery is a columnar database, and it only scans the specific columns requested in the query. Querying two columns (PULocationID, DOLocationID) requires 
-reading more data than querying one column (PULocationID), leading to a higher estimated number of bytes processed.
+reading more data than querying one column (PULocationID), leading to a higher estimated number of bytes processed. [x]
 - BigQuery duplicates data across multiple storage partitions, so selecting two columns instead of one requires scanning the table twice, 
 doubling the estimated bytes processed.
 - BigQuery automatically caches the first queried column, so adding a second column increases processing time but does not affect the estimated bytes scanned.
@@ -31,15 +38,18 @@ How many records have a fare_amount of 0?
 - 128,210
 - 546,578
 - 20,188,016
-- 8,333
+- 8,333 [x]
+
+SQL: `select count(*) as n from taxi_data.yellow_taxi_24 where fare_amount = 0;`
 
 ## Question 5:
 What is the best strategy to make an optimized table in Big Query if your query will always filter based on tpep_dropoff_datetime and order the results by VendorID (Create a new table with this strategy)
-- Partition by tpep_dropoff_datetime and Cluster on VendorID
+- Partition by tpep_dropoff_datetime and Cluster on VendorID [x]
 - Cluster on by tpep_dropoff_datetime and Cluster on VendorID
 - Cluster on tpep_dropoff_datetime Partition by VendorID
 - Partition by tpep_dropoff_datetime and Partition by VendorID
 
+Rationale: Partitioning the data up by tpep_dropoff will allow BigQuery to skip chunks of data that don't relate to the period specified in the query predicate. Clustering by Vendor ID will reduce the cost of the ORDER BY operation. 
 
 ## Question 6:
 Write a query to retrieve the distinct VendorIDs between tpep_dropoff_datetime
@@ -50,24 +60,35 @@ Use the materialized table you created earlier in your from clause and note the 
 Choose the answer which most closely matches.</br> 
 
 - 12.47 MB for non-partitioned table and 326.42 MB for the partitioned table
-- 310.24 MB for non-partitioned table and 26.84 MB for the partitioned table
+- 310.24 MB for non-partitioned table and 26.84 MB for the partitioned table [x]
 - 5.87 MB for non-partitioned table and 0 MB for the partitioned table
 - 310.31 MB for non-partitioned table and 285.64 MB for the partitioned table
 
+sql:
+```
+select distinct VendorID
+from taxi_data.yellow_taxi_24
+-- from taxi_data.yellow_taxi_24_part_clust
+where date_trunc(tpep_pickup_datetime, day) between '2024-03-01' and '2024-03-15';
+```
 
 ## Question 7: 
 Where is the data stored in the External Table you created?
 
 - Big Query
 - Container Registry
-- GCP Bucket
+- GCP Bucket [x]
 - Big Table
 
 ## Question 8:
 It is best practice in Big Query to always cluster your data:
 - True
-- False
+- False [x]
+
+Rationale: Clustering has a management cost for BigQuery, and really only helps if you're frequently filtering & sorting on a particular set of fields.
 
 
 ## (Bonus: Not worth points) Question 9:
 No Points: Write a `SELECT count(*)` query FROM the materialized table you created. How many bytes does it estimate will be read? Why?
+
+Answer: 0 B. This is because basic table statistics are automatically tracked by BigQuery as metadata, which can be retrieved without any required processing.
