@@ -38,3 +38,29 @@ where extract(year from revenue_quarter) = 2020
 order by 2, 1
 ```
 
+# Question 6: P97/P95/P90 Taxi Monthly Fare
+Answer: `green: {p97: 55.0, p95: 45.0, p90: 26.5}, yellow: {p97: 31.5, p95: 25.5, p90: 19.0}`
+
+See [taxi_rides_ny/models/core/fct_taxi_trips_monthly_fare_p95.sql]() for SQL.
+
+# Question 7: Top #Nth longest P90 travel time Location for FHV
+Answer: `LaGuardia Airport, Chinatown, Garment District`
+
+SQL
+```
+with base as (
+  select distinct
+    pickup_zone,
+    dropoff_zone,
+    perc_90
+  from taxi_data.fct_fhv_monthly_zone_traveltime_p90
+  where
+    pickup_year = 2019
+    and pickup_month = 11
+    and pickup_zone in ('Newark Airport', 'SoHo', 'Yorkville East')
+)
+select *
+from base
+qualify row_number() over(partition by pickup_zone order by perc_90 desc) = 2
+order by 1
+```
